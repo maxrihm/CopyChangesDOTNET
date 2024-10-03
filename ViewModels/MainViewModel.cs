@@ -1,4 +1,3 @@
-// ViewModels/MainViewModel.cs
 using CopyChanges.Commands;
 using CopyChanges.Helpers;
 using CopyChanges.LineHandlers;
@@ -28,6 +27,7 @@ namespace CopyChanges.ViewModels
             {
                 _projectDirectory = value;
                 OnPropertyChanged();
+                UpdateCurrentProjectLabel();
             }
         }
 
@@ -38,6 +38,17 @@ namespace CopyChanges.ViewModels
             set
             {
                 _statusMessage = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private string _currentProjectLabel;
+        public string CurrentProjectLabel
+        {
+            get => _currentProjectLabel;
+            private set
+            {
+                _currentProjectLabel = value;
                 OnPropertyChanged();
             }
         }
@@ -78,7 +89,6 @@ namespace CopyChanges.ViewModels
             if (!string.IsNullOrEmpty(directory))
             {
                 ProjectDirectory = directory;
-                // Load the files from the directory
             }
             else
             {
@@ -101,6 +111,11 @@ namespace CopyChanges.ViewModels
             }
 
             StatusMessage = "Git changes loaded into editor 1.";
+        }
+
+        private void UpdateCurrentProjectLabel()
+        {
+            CurrentProjectLabel = string.IsNullOrEmpty(ProjectDirectory) ? "No project loaded" : $"Current Project: {ProjectDirectory}";
         }
     }
 }

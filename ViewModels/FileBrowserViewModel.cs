@@ -1,4 +1,3 @@
-// ViewModels/FileBrowserViewModel.cs
 using CopyChanges.Commands;
 using CopyChanges.Helpers;
 using CopyChanges.Services;
@@ -29,7 +28,6 @@ namespace CopyChanges.ViewModels
             if (!string.IsNullOrEmpty(directory))
             {
                 _mainViewModel.ProjectDirectory = directory;
-                // Optionally load files into some UI component.
             }
         }
     }

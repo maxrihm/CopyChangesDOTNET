@@ -13,5 +13,9 @@
                 <local:FileBrowserView />
             </TabItem>
         </TabControl>
+        <!-- New Label to display current project -->
+        <TextBlock Text="{Binding CurrentProjectLabel}" 
+                   HorizontalAlignment="Left" VerticalAlignment="Top" 
+                   Margin="10,10,0,0" FontWeight="Bold" FontSize="16"/>
     </Grid>
 </Window>
