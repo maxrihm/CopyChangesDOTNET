@@ -1,4 +1,5 @@
 using CopyChanges.Commands;
+using System.Windows;
 using System.Windows.Input;
 
 namespace CopyChanges.ViewModels
@@ -21,7 +22,11 @@ namespace CopyChanges.ViewModels
 
         private void CopyContent(object parameter)
         {
-            System.Windows.Clipboard.SetText(Content);
+            if (!string.IsNullOrEmpty(Content))
+            {
+                System.Windows.Clipboard.SetText(Content);
+            }
         }
+
     }
 }

@@ -10,25 +10,16 @@
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
-        <StackPanel Orientation="Horizontal" Grid.Row="0">
+
+        <!-- StackPanel for controls -->
+        <StackPanel Orientation="Horizontal" Grid.Row="0" HorizontalAlignment="Left">
             <Button Content="Browse Project Directory" Command="{Binding BrowseProjectDirectoryCommand}" />
             <Button Content="Get Git Changes (Editor 1)" Command="{Binding GetGitChangesCommand}" />
             <TextBlock Text="{Binding StatusMessage}" Margin="10,0,0,0" VerticalAlignment="Center" />
         </StackPanel>
-        <Grid Grid.Row="1">
-            <!-- Define rows and columns for editors -->
-            <Grid.RowDefinitions>
-                <RowDefinition Height="*" />
-                <RowDefinition Height="*" />
-                <RowDefinition Height="*" />
-            </Grid.RowDefinitions>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="*" />
-            </Grid.ColumnDefinitions>
 
-            <!-- Place TextEditors -->
+        <!-- Editors section -->
+        <Grid Grid.Row="1" Margin="5">
             <ItemsControl ItemsSource="{Binding TextEditors}">
                 <ItemsControl.ItemsPanel>
                     <ItemsPanelTemplate>
@@ -38,9 +29,16 @@
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
                         <Grid Margin="5">
-                            <TextBlock Text="Editor" FontWeight="Bold" />
-                            <TextBox Text="{Binding Content}" AcceptsReturn="True" VerticalScrollBarVisibility="Auto" Margin="0,20,0,0" />
-                            <Button Content="Copy Content" Command="{Binding CopyContentCommand}" VerticalAlignment="Bottom" />
+                            <TextBox Text="{Binding Content}" AcceptsReturn="True" 
+                                     VerticalScrollBarVisibility="Auto"
+                                     HorizontalScrollBarVisibility="Auto"
+                                     VerticalAlignment="Stretch"
+                                     HorizontalAlignment="Stretch"
+                                     BorderBrush="Gray"
+                                     BorderThickness="1"/>
+                            <Button Content="Copy Content" Command="{Binding CopyContentCommand}" 
+                                    HorizontalAlignment="Right" 
+                                    VerticalAlignment="Bottom" Margin="5"/>
                         </Grid>
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>

@@ -1,4 +1,4 @@
-using Microsoft.Win32;
+using System.Windows.Forms;
 
 namespace CopyChanges.Helpers
 {
@@ -6,19 +6,17 @@ namespace CopyChanges.Helpers
     {
         public string OpenFolderDialog()
         {
-            var dialog = new OpenFileDialog
+            using (var dialog = new FolderBrowserDialog())
             {
-                CheckFileExists = false,
-                CheckPathExists = true,
-                FileName = "Select Folder",
-                ValidateNames = false
-            };
+                dialog.Description = "Select Project Directory";
+                dialog.ShowNewFolderButton = false; // You can allow the user to create new folders if you want by setting this to true.
 
-            bool? result = dialog.ShowDialog();
+                DialogResult result = dialog.ShowDialog();
 
-            if (result == true)
-            {
-                return System.IO.Path.GetDirectoryName(dialog.FileName);
+                if (result == DialogResult.OK && !string.IsNullOrWhiteSpace(dialog.SelectedPath))
+                {
+                    return dialog.SelectedPath;
+                }
             }
             return string.Empty;
         }
