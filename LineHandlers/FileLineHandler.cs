@@ -1,5 +1,4 @@
-﻿// LineHandlers/FileLineHandler.cs
-using CopyChanges.Services;
+﻿using CopyChanges.Services;
 using System.IO;
 using System.Text;
 
@@ -8,26 +7,37 @@ namespace CopyChanges.LineHandlers
     public class FileLineHandler : BaseLineHandler
     {
         private readonly IFileService _fileService;
+        private readonly string _projectDirectory;
 
-        public FileLineHandler(IFileService fileService)
+        public FileLineHandler(IFileService fileService, string projectDirectory)
         {
             _fileService = fileService;
+            _projectDirectory = projectDirectory;
         }
 
         public override bool CanHandle(string line)
         {
-            return File.Exists(line); // Checks if the line is a file path.
+            // Check if the line is a valid file path relative to the project directory.
+            var potentialFilePath = Path.Combine(_projectDirectory, line);
+            
+            // DEBUG: Add a breakpoint or log here to ensure it's checking the right path.
+            return File.Exists(potentialFilePath);
         }
 
         public override string Handle(string line)
         {
             if (CanHandle(line))
             {
-                var content = _fileService.ReadFileContent(line);
-                return $"{Path.GetFileName(line)}:\n{content}\n-----------------------\n";
+                // Combine the project directory with the file name to get the full path.
+                var fullPath = Path.Combine(_projectDirectory, line);
+                var content = _fileService.ReadFileContent(fullPath);
+                
+                // DEBUG: Add a breakpoint or log to check if this is reached.
+                return $"{Path.GetFileName(fullPath)}:\n{content}\n-----------------------\n";
             }
 
             return PassToNext(line);
         }
+
     }
 }

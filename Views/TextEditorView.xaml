@@ -11,7 +11,7 @@
         <!-- StackPanel for controls -->
         <StackPanel Orientation="Horizontal" Grid.Row="0" HorizontalAlignment="Left">
             <Button Content="Browse Project Directory" Command="{Binding BrowseProjectDirectoryCommand}" />
-            <Button Content="Get Git Changes" Command="{Binding GetGitChangesCommand}" />
+            <Button Content="Get Git Changes (Editor 1)" Command="{Binding GetGitChangesCommand}" />
             <TextBlock Text="{Binding StatusMessage}" Margin="10,0,0,0" VerticalAlignment="Center" />
         </StackPanel>
 
@@ -26,6 +26,7 @@
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
                         <Grid Margin="5">
+                            <!-- TextBox for displaying and editing content -->
                             <TextBox Text="{Binding Content, UpdateSourceTrigger=PropertyChanged}"
                                      AcceptsReturn="True"
                                      VerticalScrollBarVisibility="Auto"
@@ -34,7 +35,9 @@
                                      HorizontalAlignment="Stretch"
                                      BorderBrush="Gray"
                                      BorderThickness="1" />
-                            <Button Content="Copy Content" Command="{Binding CopyContentCommand}"
+                             
+                            <!-- Button for copying plain text (file names, etc.) -->
+                            <Button Content="Copy Plain Text" Command="{Binding CopyContentCommand}"
                                     HorizontalAlignment="Right"
                                     VerticalAlignment="Bottom" Margin="5"/>
                         </Grid>

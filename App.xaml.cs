@@ -1,5 +1,4 @@
-﻿// App.xaml.cs
-using CopyChanges.LineHandlers;
+﻿using CopyChanges.LineHandlers;
 using CopyChanges.Services;
 using CopyChanges.ViewModels;
 using CopyChanges.Views;
@@ -31,6 +30,7 @@ namespace CopyChanges
             services.AddSingleton<IFileService, FileService>();
             services.AddSingleton<IGitService, GitService>();
             services.AddSingleton<IJsonService, JsonService>();
+            services.AddSingleton<IClipboardService, ClipboardService>();
 
             services.AddSingleton<MainViewModel>();
 

@@ -12,6 +12,7 @@ namespace CopyChanges.ViewModels
         private readonly IFileService _fileService;
         private readonly IGitService _gitService;
         private readonly IJsonService _jsonService;
+        private readonly IClipboardService _clipboardService;
         private BaseLineHandler _lineHandlerChain;
 
         public ObservableCollection<TextEditorViewModel> TextEditors { get; }
@@ -28,6 +29,7 @@ namespace CopyChanges.ViewModels
                 _projectDirectory = value;
                 OnPropertyChanged();
                 UpdateCurrentProjectLabel();
+                SetupLineHandlerChain();  // Update line handler chain when project directory changes
             }
         }
 
@@ -53,32 +55,41 @@ namespace CopyChanges.ViewModels
             }
         }
 
-        public MainViewModel(IFileService fileService, IGitService gitService, IJsonService jsonService)
+        public MainViewModel(IFileService fileService, IGitService gitService, IJsonService jsonService, IClipboardService clipboardService)
         {
             _fileService = fileService;
             _gitService = gitService;
             _jsonService = jsonService;
+            _clipboardService = clipboardService;
 
             TextEditors = new ObservableCollection<TextEditorViewModel>();
 
             for (int i = 0; i < 9; i++)
             {
-                TextEditors.Add(new TextEditorViewModel());
+                TextEditors.Add(new TextEditorViewModel(_lineHandlerChain, clipboardService));
             }
 
             BrowseProjectDirectoryCommand = new RelayCommand(BrowseProjectDirectory);
             GetGitChangesCommand = new RelayCommand(GetGitChanges, CanExecuteGitCommands);
-
-            SetupLineHandlerChain();
         }
 
         private void SetupLineHandlerChain()
         {
-            var fileLineHandler = new FileLineHandler(_fileService);
-            var textLineHandler = new TextLineHandler();
+            if (!string.IsNullOrEmpty(ProjectDirectory))
+            {
+                // Ensure the file line handler is initialized with the project directory
+                var fileLineHandler = new FileLineHandler(_fileService, ProjectDirectory);
+                var textLineHandler = new TextLineHandler();
 
-            textLineHandler.SetNext(fileLineHandler);
-            _lineHandlerChain = textLineHandler;
+                fileLineHandler.SetNext(textLineHandler);  // FileLineHandler should be first in the chain
+                _lineHandlerChain = fileLineHandler;
+
+                // Update the line handler chain for each editor
+                foreach (var editor in TextEditors)
+                {
+                    editor.UpdateLineHandlerChain(_lineHandlerChain);
+                }
+            }
         }
 
         private void BrowseProjectDirectory(object parameter)
