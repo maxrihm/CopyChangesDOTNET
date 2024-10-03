@@ -4,9 +4,6 @@
         xmlns:local="clr-namespace:CopyChanges.Views"
         xmlns:viewmodels="clr-namespace:CopyChanges.ViewModels"
         Title="CopyChanges" Height="900" Width="1500">
-    <Window.DataContext>
-        <viewmodels:MainViewModel />
-    </Window.DataContext>
     <Grid>
         <TabControl>
             <TabItem Header="Text Editors">

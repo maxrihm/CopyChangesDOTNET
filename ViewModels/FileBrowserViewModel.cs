@@ -1,60 +1,36 @@
-using CopyChanges.Models;
+// ViewModels/FileBrowserViewModel.cs
+using CopyChanges.Commands;
+using CopyChanges.Helpers;
 using CopyChanges.Services;
-using System.Collections.ObjectModel;
-using System.IO;
+using System.Windows.Input;
 
 namespace CopyChanges.ViewModels
 {
     public class FileBrowserViewModel : BaseViewModel
     {
         private readonly IFileService _fileService;
-        private readonly IJsonService _jsonService;
+        private readonly MainViewModel _mainViewModel;
 
-        public ObservableCollection<FileItem> Files { get; set; }
+        public ICommand LoadProjectDirectoryCommand { get; }
 
-        public FileBrowserViewModel(IFileService fileService, IJsonService jsonService)
+        public FileBrowserViewModel(IFileService fileService, MainViewModel mainViewModel)
         {
             _fileService = fileService;
-            _jsonService = jsonService;
-            Files = new ObservableCollection<FileItem>();
+            _mainViewModel = mainViewModel;
+
+            LoadProjectDirectoryCommand = new RelayCommand(LoadProjectDirectory);
         }
 
-        public void LoadDirectory(string directory)
+        private void LoadProjectDirectory(object parameter)
         {
-            Files.Clear();
-            var rootItem = new FileItem
-            {
-                Name = Path.GetFileName(directory),
-                FullPath = directory,
-                Children = GetDirectoryItems(directory)
-            };
-            Files.Add(rootItem);
-        }
+            var dialogService = new DialogService();
+            var directory = dialogService.OpenFolderDialog();
 
-        private ObservableCollection<FileItem> GetDirectoryItems(string path)
-        {
-            var items = new ObservableCollection<FileItem>();
-            foreach (var dir in Directory.GetDirectories(path))
+            if (!string.IsNullOrEmpty(directory))
             {
-                items.Add(new FileItem
-                {
-                    Name = Path.GetFileName(dir),
-                    FullPath = dir,
-                    Children = GetDirectoryItems(dir)
-                });
+                _mainViewModel.ProjectDirectory = directory;
+                // Optionally load files into some UI component.
             }
-
-            foreach (var file in Directory.GetFiles(path))
-            {
-                items.Add(new FileItem
-                {
-                    Name = Path.GetFileName(file),
-                    FullPath = file,
-                    IsChecked = false
-                });
-            }
-
-            return items;
         }
     }
 }

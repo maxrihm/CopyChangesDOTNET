@@ -3,9 +3,6 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:viewmodels="clr-namespace:CopyChanges.ViewModels"
              xmlns:models="clr-namespace:CopyChanges.Models">
-	<UserControl.DataContext>
-		<viewmodels:MainViewModel />
-	</UserControl.DataContext>
     <Grid>
         <TreeView ItemsSource="{Binding FileBrowserViewModel.Files}">
             <TreeView.ItemTemplate>

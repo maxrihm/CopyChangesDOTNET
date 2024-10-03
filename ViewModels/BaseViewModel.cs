@@ -1,4 +1,5 @@
-﻿using System.ComponentModel;
+﻿// BaseViewModel.cs
+using System.ComponentModel;
 using System.Runtime.CompilerServices;
 
 namespace CopyChanges.ViewModels

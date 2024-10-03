@@ -1,3 +1,4 @@
+// Services/FileService.cs
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -16,11 +17,6 @@ namespace CopyChanges.Services
             {
                 return $"Failed to read {fullPath}: {ex.Message}";
             }
-        }
-
-        public void SaveToFile(string filePath, string data)
-        {
-            File.WriteAllText(filePath, data);
         }
 
         public IEnumerable<string> GetAllFiles(string directory)

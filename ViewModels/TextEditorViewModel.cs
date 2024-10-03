@@ -1,5 +1,7 @@
+// TextEditorViewModel.cs
 using CopyChanges.Commands;
-using System.Windows;
+using System.ComponentModel;
+using System.Runtime.CompilerServices;
 using System.Windows.Input;
 
 namespace CopyChanges.ViewModels
@@ -7,10 +9,15 @@ namespace CopyChanges.ViewModels
     public class TextEditorViewModel : BaseViewModel
     {
         private string _content;
+
         public string Content
         {
             get => _content;
-            set { _content = value; OnPropertyChanged(); }
+            set
+            {
+                _content = value;
+                OnPropertyChanged(); // This raises the PropertyChanged event for the UI to update.
+            }
         }
 
         public ICommand CopyContentCommand { get; }
@@ -27,6 +34,5 @@ namespace CopyChanges.ViewModels
                 System.Windows.Clipboard.SetText(Content);
             }
         }
-
     }
 }
