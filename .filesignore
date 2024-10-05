@@ -2,3 +2,4 @@
 .gitignore
 CopyChanges.csproj
 AssemblyInfo.cs
+.filesignore
