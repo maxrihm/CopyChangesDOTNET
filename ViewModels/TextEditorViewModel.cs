@@ -19,8 +19,11 @@ namespace CopyChanges.ViewModels
             get => _content;
             set
             {
-                _content = value;
-                OnPropertyChanged();
+                if (_content != value)
+                {
+                    _content = value;
+                    OnPropertyChanged();
+                }
             }
         }
 
@@ -61,5 +64,3 @@ namespace CopyChanges.ViewModels
         }
     }
 }
-
-

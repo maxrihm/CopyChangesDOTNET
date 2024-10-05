@@ -1,4 +1,3 @@
-﻿// MainWindow.xaml.cs
 using CopyChanges.ViewModels;
 using System.Windows;
 

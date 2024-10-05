@@ -1,7 +1,8 @@
 <UserControl x:Class="CopyChanges.Views.TextEditorView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:viewmodels="clr-namespace:CopyChanges.ViewModels">
+             xmlns:viewmodels="clr-namespace:CopyChanges.ViewModels"
+             xmlns:avalonedit="http://icsharpcode.net/sharpdevelop/avalonedit">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
@@ -27,17 +28,20 @@
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
                         <Grid Margin="5">
-                            <!-- TextBox for displaying and editing content -->
-                            <TextBox Text="{Binding Content, UpdateSourceTrigger=PropertyChanged}"
-                                     AcceptsReturn="True"
-                                     VerticalScrollBarVisibility="Auto"
-                                     HorizontalScrollBarVisibility="Auto"
-                                     TextWrapping="Wrap"
-                                     VerticalAlignment="Stretch"
-                                     HorizontalAlignment="Stretch"
-                                     BorderBrush="Gray"
-                                     BorderThickness="1" />
-                             
+                            <!-- AvalonEdit for displaying and editing content -->
+                            <avalonedit:TextEditor x:Name="avalonTextEditor"
+                                                   HorizontalScrollBarVisibility="Auto"
+                                                   VerticalScrollBarVisibility="Auto"
+                                                   ShowLineNumbers="True"
+                                                   SyntaxHighlighting="CSharp"
+                                                   FontFamily="Consolas"
+                                                   FontSize="14"
+                                                   VerticalAlignment="Stretch"
+                                                   HorizontalAlignment="Stretch"
+                                                   BorderBrush="Gray"
+                                                   BorderThickness="1"
+                                                   TextChanged="AvalonTextEditor_OnTextChanged"/>
+
                             <!-- Button for copying plain text (file names, etc.) -->
                             <Button Content="Copy" Command="{Binding CopyContentCommand}"
                                     HorizontalAlignment="Right"
@@ -58,5 +62,3 @@
         </Grid>
     </Grid>
 </UserControl>
-
-
