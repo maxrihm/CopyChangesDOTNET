@@ -17,6 +17,15 @@ namespace CopyChanges.Commands
         {
             _viewModel = viewModel;
             _fileService = fileService;
+
+            // Register to listen for changes in ProjectDirectory
+            _viewModel.PropertyChanged += (sender, args) =>
+            {
+                if (args.PropertyName == nameof(MainViewModel.ProjectDirectory))
+                {
+                    CanExecuteChanged?.Invoke(this, EventArgs.Empty);
+                }
+            };
         }
 
         public bool CanExecute(object parameter)
@@ -26,27 +35,40 @@ namespace CopyChanges.Commands
 
         public void Execute(object parameter)
         {
-            var files = GetProjectFiles(_viewModel.ProjectDirectory);
-            _viewModel.ProjectFiles = string.Join("\n", files);
-        }
+            var projectDirectory = _viewModel.ProjectDirectory;
+            if (string.IsNullOrEmpty(projectDirectory)) return;
 
-        private IEnumerable<string> GetProjectFiles(string projectDirectory)
-        {
             var allFiles = _fileService.GetAllFiles(projectDirectory);
+            List<string> ignorePatterns = new List<string>();
+
+            // Check if .filesignore exists and add its patterns
             var filesIgnorePath = Path.Combine(projectDirectory, ".filesignore");
-
-            var ignorePatterns = _fileService.ReadFileContent(filesIgnorePath)?.Split('\n') ?? Array.Empty<string>();
-            var gitIgnorePath = Path.Combine(projectDirectory, ".gitignore");
-
-            if (File.Exists(gitIgnorePath))
+            if (File.Exists(filesIgnorePath))
             {
-                ignorePatterns = ignorePatterns.Concat(File.ReadAllLines(gitIgnorePath)).ToArray();
+                ignorePatterns.AddRange(_fileService.ReadFileContent(filesIgnorePath)?.Split(new[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries) ?? Array.Empty<string>());
             }
 
-            return allFiles.Where(file => !_fileService.IsFileIgnored(file, ignorePatterns));
+            // Check if .gitignore exists and add its patterns
+            var gitIgnorePath = Path.Combine(projectDirectory, ".gitignore");
+            if (File.Exists(gitIgnorePath))
+            {
+                ignorePatterns.AddRange(File.ReadAllLines(gitIgnorePath));
+            }
+
+            var filteredFiles = allFiles.Where(file => !_fileService.IsFileIgnored(file, ignorePatterns));
+            var result = string.Join("\n", filteredFiles);
+
+            // Update ViewModel properties
+            _viewModel.ProjectFiles = result;
+
+            if (_viewModel.TextEditors.Count > 0)
+            {
+                _viewModel.TextEditors[0].Content = result;
+            }
+
+            _viewModel.StatusMessage = "Project files loaded into editor 1.";
         }
 
         public event EventHandler CanExecuteChanged;
     }
 }
-
