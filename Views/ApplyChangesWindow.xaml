@@ -9,7 +9,8 @@
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
 
-        <TextBox x:Name="InputTextBox" Grid.Row="0" Margin="10" Height="100" AcceptsReturn="True" VerticalScrollBarVisibility="Auto"/>
+        <TextBox x:Name="InputTextBox" Grid.Row="0" Margin="10" Height="100" AcceptsReturn="True" VerticalScrollBarVisibility="Auto" Text="{Binding InputText, UpdateSourceTrigger=PropertyChanged}"/>
         <Button Content="Apply" Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center" Command="{Binding ApplyChangesCommand}" Margin="10"/>
     </Grid>
 </Window>
+

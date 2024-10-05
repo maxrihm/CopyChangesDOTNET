@@ -1,4 +1,4 @@
-﻿using System.Windows;
+using System.Windows;
 
 namespace CopyChanges.Views
 {
@@ -10,3 +10,4 @@ namespace CopyChanges.Views
         }
     }
 }
+

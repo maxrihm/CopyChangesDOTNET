@@ -1,4 +1,4 @@
-﻿using CopyChanges.Commands;
+using CopyChanges.Commands;
 using CopyChanges.Services;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -41,7 +41,7 @@ namespace CopyChanges.ViewModels
 
             foreach (var line in lines)
             {
-                var match = Regex.Match(line, "^//\\s*(.*)$");
+                var match = Regex.Match(line, "^//\\s*(.+)$");
                 if (match.Success)
                 {
                     if (currentFilePath != null && fileContentBuilder.Length > 0)
@@ -49,7 +49,7 @@ namespace CopyChanges.ViewModels
                         SaveFileContent(currentFilePath, fileContentBuilder.ToString());
                         fileContentBuilder.Clear();
                     }
-                    currentFilePath = match.Groups[1].Value;
+                    currentFilePath = match.Groups[1].Value.Trim();
                 }
                 else if (!string.IsNullOrEmpty(currentFilePath))
                 {
@@ -66,7 +66,10 @@ namespace CopyChanges.ViewModels
         private void SaveFileContent(string relativePath, string content)
         {
             var fullPath = System.IO.Path.Combine(_projectDirectory, relativePath);
-            _fileService.WriteFileContent(fullPath, content);
+            if (System.IO.File.Exists(fullPath))
+            {
+                _fileService.WriteFileContent(fullPath, content);
+            }
         }
     }
 }
