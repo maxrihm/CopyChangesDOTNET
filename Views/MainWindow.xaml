@@ -17,5 +17,6 @@
         <TextBlock Text="{Binding CurrentProjectLabel}" 
                    HorizontalAlignment="Left" VerticalAlignment="Top" 
                    Margin="10,10,0,0" FontWeight="Bold" FontSize="16"/>
+        <Button Content="Apply Changes" Command="{Binding OpenApplyChangesWindowCommand}" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="10"/>
     </Grid>
 </Window>

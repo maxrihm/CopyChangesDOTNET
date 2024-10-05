@@ -2,6 +2,7 @@ using CopyChanges.Commands;
 using CopyChanges.Helpers;
 using CopyChanges.LineHandlers;
 using CopyChanges.Services;
+using CopyChanges.Views;
 using System.Collections.ObjectModel;
 using System.Windows.Input;
 
@@ -19,6 +20,7 @@ namespace CopyChanges.ViewModels
 
         public ICommand BrowseProjectDirectoryCommand { get; }
         public ICommand GetGitChangesCommand { get; }
+        public ICommand OpenApplyChangesWindowCommand { get; }
 
         private string _projectDirectory;
         public string ProjectDirectory
@@ -71,6 +73,7 @@ namespace CopyChanges.ViewModels
 
             BrowseProjectDirectoryCommand = new RelayCommand(BrowseProjectDirectory);
             GetGitChangesCommand = new RelayCommand(GetGitChanges, CanExecuteGitCommands);
+            OpenApplyChangesWindowCommand = new RelayCommand(OpenApplyChangesWindow);
         }
 
         private void SetupLineHandlerChain()
@@ -94,6 +97,15 @@ namespace CopyChanges.ViewModels
                     editor.UpdateLineHandlerChain(_lineHandlerChain);
                 }
             }
+        }
+
+        private void OpenApplyChangesWindow(object parameter)
+        {
+            var window = new ApplyChangesWindow
+            {
+                DataContext = new ApplyChangesViewModel(_fileService, ProjectDirectory)
+            };
+            window.Show();
         }
 
         private void BrowseProjectDirectory(object parameter)

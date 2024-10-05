@@ -23,5 +23,17 @@ namespace CopyChanges.Services
         {
             return Directory.GetFiles(directory, "*.*", SearchOption.AllDirectories);
         }
+
+        public void WriteFileContent(string fullPath, string content)
+        {
+            try
+            {
+                File.WriteAllText(fullPath, content);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"Failed to write to {fullPath}: {ex.Message}");
+            }
+        }
     }
 }
