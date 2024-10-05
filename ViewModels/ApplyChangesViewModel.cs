@@ -3,6 +3,8 @@ using CopyChanges.Services;
 using CopyChanges.Constants;
 using System.Windows.Input;
 using System.IO;
+using System.Text;
+using System.Text.RegularExpressions;
 
 namespace CopyChanges.ViewModels
 {
@@ -10,6 +12,8 @@ namespace CopyChanges.ViewModels
     {
         private readonly IFileService _fileService;
         private readonly IClipboardService _clipboardService;
+
+        private readonly string _projectDirectory;
 
         private string _inputText;
         public string InputText
@@ -25,10 +29,10 @@ namespace CopyChanges.ViewModels
         public ICommand ApplyChangesCommand { get; }
         public ICommand CompareChangesCommand { get; }
 
-        public ApplyChangesViewModel(IFileService fileService, IClipboardService clipboardService)
+        public ApplyChangesViewModel(IFileService fileService, string projectDirectory)
         {
             _fileService = fileService;
-            _clipboardService = clipboardService;
+            _projectDirectory = projectDirectory;
             ApplyChangesCommand = new RelayCommand(ApplyChanges);
             CompareChangesCommand = new RelayCommand(CompareChanges);
         }
@@ -37,13 +41,38 @@ namespace CopyChanges.ViewModels
         {
             if (string.IsNullOrEmpty(InputText)) return;
 
-            if (File.Exists(PathConstants.File1Path))
+            var lines = InputText.Split(new[] { "\r\n", "\r", "\n" }, System.StringSplitOptions.None);
+            string currentFilePath = null;
+            var fileContentBuilder = new StringBuilder();
+
+            foreach (var line in lines)
             {
-                var oldContent = _fileService.ReadFileContent(PathConstants.File1Path);
-                _fileService.WriteFileContent(PathConstants.File2Path, oldContent);
+                var match = Regex.Match(line, "^//\\s*(.*)$");
+                if (match.Success)
+                {
+                    if (currentFilePath != null && fileContentBuilder.Length > 0)
+                    {
+                        SaveFileContent(currentFilePath, fileContentBuilder.ToString());
+                        fileContentBuilder.Clear();
+                    }
+                    currentFilePath = match.Groups[1].Value;
+                }
+                else if (!string.IsNullOrEmpty(currentFilePath))
+                {
+                    fileContentBuilder.AppendLine(line);
+                }
             }
 
-            _fileService.WriteFileContent(PathConstants.File1Path, InputText);
+            if (currentFilePath != null && fileContentBuilder.Length > 0)
+            {
+                SaveFileContent(currentFilePath, fileContentBuilder.ToString());
+            }
+        }
+
+        private void SaveFileContent(string relativePath, string content)
+        {
+            var fullPath = System.IO.Path.Combine(_projectDirectory, relativePath);
+            _fileService.WriteFileContent(fullPath, content);
         }
 
         private void CompareChanges(object parameter)
