@@ -1,15 +1,15 @@
 using CopyChanges.Commands;
 using CopyChanges.Services;
-using System.Text;
-using System.Text.RegularExpressions;
+using CopyChanges.Constants;
 using System.Windows.Input;
+using System.IO;
 
 namespace CopyChanges.ViewModels
 {
     public class ApplyChangesViewModel : BaseViewModel
     {
         private readonly IFileService _fileService;
-        private readonly string _projectDirectory;
+        private readonly IClipboardService _clipboardService;
 
         private string _inputText;
         public string InputText
@@ -23,53 +23,43 @@ namespace CopyChanges.ViewModels
         }
 
         public ICommand ApplyChangesCommand { get; }
+        public ICommand CompareChangesCommand { get; }
 
-        public ApplyChangesViewModel(IFileService fileService, string projectDirectory)
+        public ApplyChangesViewModel(IFileService fileService, IClipboardService clipboardService)
         {
             _fileService = fileService;
-            _projectDirectory = projectDirectory;
+            _clipboardService = clipboardService;
             ApplyChangesCommand = new RelayCommand(ApplyChanges);
+            CompareChangesCommand = new RelayCommand(CompareChanges);
         }
 
         private void ApplyChanges(object parameter)
         {
             if (string.IsNullOrEmpty(InputText)) return;
 
-            var lines = InputText.Split(new[] { "\r\n", "\r", "\n" }, System.StringSplitOptions.None);
-            string currentFilePath = null;
-            var fileContentBuilder = new StringBuilder();
-
-            foreach (var line in lines)
+            if (File.Exists(PathConstants.File1Path))
             {
-                var match = Regex.Match(line, "^//\\s*(.+)$");
-                if (match.Success)
-                {
-                    if (currentFilePath != null && fileContentBuilder.Length > 0)
-                    {
-                        SaveFileContent(currentFilePath, fileContentBuilder.ToString());
-                        fileContentBuilder.Clear();
-                    }
-                    currentFilePath = match.Groups[1].Value.Trim();
-                }
-                else if (!string.IsNullOrEmpty(currentFilePath))
-                {
-                    fileContentBuilder.AppendLine(line);
-                }
+                var oldContent = _fileService.ReadFileContent(PathConstants.File1Path);
+                _fileService.WriteFileContent(PathConstants.File2Path, oldContent);
             }
 
-            if (currentFilePath != null && fileContentBuilder.Length > 0)
-            {
-                SaveFileContent(currentFilePath, fileContentBuilder.ToString());
-            }
+            _fileService.WriteFileContent(PathConstants.File1Path, InputText);
         }
 
-        private void SaveFileContent(string relativePath, string content)
+        private void CompareChanges(object parameter)
         {
-            var fullPath = System.IO.Path.Combine(_projectDirectory, relativePath);
-            if (System.IO.File.Exists(fullPath))
+            if (File.Exists(PathConstants.File1Path) && File.Exists(PathConstants.File2Path))
             {
-                _fileService.WriteFileContent(fullPath, content);
+                var file1Content = _fileService.ReadFileContent(PathConstants.File1Path);
+                var file2Content = _fileService.ReadFileContent(PathConstants.File2Path);
+
+                InputText = file1Content == file2Content ? "Files are identical." : "Files are different.";
+            }
+            else
+            {
+                InputText = "One or both files do not exist.";
             }
         }
     }
 }
+

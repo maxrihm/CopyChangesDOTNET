@@ -103,7 +103,7 @@ namespace CopyChanges.ViewModels
         {
             var window = new ApplyChangesWindow
             {
-                DataContext = new ApplyChangesViewModel(_fileService, ProjectDirectory)
+                DataContext = new ApplyChangesViewModel(_fileService, _clipboardService)
             };
             window.Show();
         }
