@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
+using System.Text.RegularExpressions;
 
 namespace CopyChanges.Services
 {
@@ -33,6 +35,15 @@ namespace CopyChanges.Services
             {
                 throw new Exception($"Failed to write to {fullPath}: {ex.Message}");
             }
+        }
+
+        public bool IsFileIgnored(string filePath, IEnumerable<string> patterns)
+        {
+            return patterns.Any(pattern =>
+            {
+                var regexPattern = Regex.Escape(pattern).Replace("\\*", ".*").Replace("\\?", ".");
+                return Regex.IsMatch(filePath, regexPattern);
+            });
         }
     }
 }

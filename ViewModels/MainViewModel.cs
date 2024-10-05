@@ -20,6 +20,7 @@ namespace CopyChanges.ViewModels
 
         public ICommand BrowseProjectDirectoryCommand { get; }
         public ICommand GetGitChangesCommand { get; }
+        public ICommand GetProjectFilesCommand { get; }
         public ICommand OpenApplyChangesWindowCommand { get; }
 
         private string _projectDirectory;
@@ -31,7 +32,18 @@ namespace CopyChanges.ViewModels
                 _projectDirectory = value;
                 OnPropertyChanged();
                 UpdateCurrentProjectLabel();
-                SetupLineHandlerChain();  // Update line handler chain when project directory changes
+                SetupLineHandlerChain();
+            }
+        }
+
+        private string _projectFiles;
+        public string ProjectFiles
+        {
+            get => _projectFiles;
+            set
+            {
+                _projectFiles = value;
+                OnPropertyChanged();
             }
         }
 
@@ -73,6 +85,7 @@ namespace CopyChanges.ViewModels
 
             BrowseProjectDirectoryCommand = new RelayCommand(BrowseProjectDirectory);
             GetGitChangesCommand = new RelayCommand(GetGitChanges, CanExecuteGitCommands);
+            GetProjectFilesCommand = new GetProjectFilesCommand(this, _fileService);
             OpenApplyChangesWindowCommand = new RelayCommand(OpenApplyChangesWindow);
         }
 
@@ -80,18 +93,15 @@ namespace CopyChanges.ViewModels
         {
             if (!string.IsNullOrEmpty(ProjectDirectory))
             {
-                // Create handlers
                 var fileLineHandler = new FileLineHandler(_fileService, ProjectDirectory);
                 var numericLineHandler = new NumericLineHandler(TextEditors, fileLineHandler);
                 var textLineHandler = new TextLineHandler();
 
-                // Set up chain of responsibility
                 fileLineHandler.SetNext(numericLineHandler);
                 numericLineHandler.SetNext(textLineHandler);
 
                 _lineHandlerChain = fileLineHandler;
 
-                // Update the line handler chain for each editor
                 foreach (var editor in TextEditors)
                 {
                     editor.UpdateLineHandlerChain(_lineHandlerChain);
@@ -146,3 +156,4 @@ namespace CopyChanges.ViewModels
         }
     }
 }
+
