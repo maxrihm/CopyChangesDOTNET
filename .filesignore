@@ -1,0 +1,4 @@
+.gitattributes
+.gitignore
+CopyChanges.csproj
+AssemblyInfo.cs
