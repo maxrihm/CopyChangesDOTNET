@@ -33,7 +33,7 @@ namespace CopyChanges.LineHandlers
                 var content = _fileService.ReadFileContent(fullPath);
                 
                 // DEBUG: Add a breakpoint or log to check if this is reached.
-                return $"{Path.GetFileName(fullPath)}:\n{content}\n-----------------------\n";
+                return $"// {Path.GetRelativePath(_projectDirectory, fullPath)}\n{content}\n";
             }
 
             return PassToNext(line);
