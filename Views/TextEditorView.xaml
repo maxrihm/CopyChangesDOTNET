@@ -37,7 +37,7 @@
                                      BorderThickness="1" />
                              
                             <!-- Button for copying plain text (file names, etc.) -->
-                            <Button Content="Copy Plain Text" Command="{Binding CopyContentCommand}"
+                            <Button Content="Copy" Command="{Binding CopyContentCommand}"
                                     HorizontalAlignment="Right"
                                     VerticalAlignment="Bottom" Margin="5"/>
                         </Grid>

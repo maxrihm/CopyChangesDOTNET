@@ -77,11 +77,15 @@ namespace CopyChanges.ViewModels
         {
             if (!string.IsNullOrEmpty(ProjectDirectory))
             {
-                // Ensure the file line handler is initialized with the project directory
+                // Create handlers
                 var fileLineHandler = new FileLineHandler(_fileService, ProjectDirectory);
+                var numericLineHandler = new NumericLineHandler(TextEditors, fileLineHandler);
                 var textLineHandler = new TextLineHandler();
 
-                fileLineHandler.SetNext(textLineHandler);  // FileLineHandler should be first in the chain
+                // Set up chain of responsibility
+                fileLineHandler.SetNext(numericLineHandler);
+                numericLineHandler.SetNext(textLineHandler);
+
                 _lineHandlerChain = fileLineHandler;
 
                 // Update the line handler chain for each editor
