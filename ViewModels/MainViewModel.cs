@@ -80,7 +80,7 @@ namespace CopyChanges.ViewModels
 
             for (int i = 0; i < 9; i++)
             {
-                TextEditors.Add(new TextEditorViewModel(_lineHandlerChain, clipboardService));
+                TextEditors.Add(new TextEditorViewModel(_lineHandlerChain, clipboardService, i + 1));
             }
 
             BrowseProjectDirectoryCommand = new RelayCommand(BrowseProjectDirectory);

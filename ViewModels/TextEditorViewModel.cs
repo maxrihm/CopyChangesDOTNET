@@ -12,6 +12,8 @@ namespace CopyChanges.ViewModels
         private BaseLineHandler _lineHandlerChain;
         private readonly IClipboardService _clipboardService;
 
+        public int EditorNumber { get; set; }
+
         public string Content
         {
             get => _content;
@@ -24,10 +26,11 @@ namespace CopyChanges.ViewModels
 
         public ICommand CopyContentCommand { get; }
 
-        public TextEditorViewModel(BaseLineHandler lineHandlerChain, IClipboardService clipboardService)
+        public TextEditorViewModel(BaseLineHandler lineHandlerChain, IClipboardService clipboardService, int editorNumber)
         {
             _lineHandlerChain = lineHandlerChain;
             _clipboardService = clipboardService;
+            EditorNumber = editorNumber;
             CopyContentCommand = new RelayCommand(CopyContent);
         }
 
@@ -46,7 +49,6 @@ namespace CopyChanges.ViewModels
                 // Ensure each line is being processed
                 foreach (var line in lines)
                 {
-                    // DEBUG: Add a breakpoint or logging here to check each line.
                     var processedLine = _lineHandlerChain.Handle(line);
                     if (!string.IsNullOrEmpty(processedLine))
                     {
@@ -57,6 +59,7 @@ namespace CopyChanges.ViewModels
                 _clipboardService.SetText(result.ToString());
             }
         }
-
     }
 }
+
+

@@ -32,6 +32,7 @@
                                      AcceptsReturn="True"
                                      VerticalScrollBarVisibility="Auto"
                                      HorizontalScrollBarVisibility="Auto"
+                                     TextWrapping="Wrap"
                                      VerticalAlignment="Stretch"
                                      HorizontalAlignment="Stretch"
                                      BorderBrush="Gray"
@@ -41,6 +42,15 @@
                             <Button Content="Copy" Command="{Binding CopyContentCommand}"
                                     HorizontalAlignment="Right"
                                     VerticalAlignment="Bottom" Margin="5"/>
+
+                            <!-- Label showing the editor number in the top-right corner -->
+                            <TextBlock Text="{Binding EditorNumber}"
+                                       HorizontalAlignment="Right"
+                                       VerticalAlignment="Top"
+                                       FontWeight="Bold"
+                                       Foreground="Gray"
+                                       FontSize="16"
+                                       Margin="5"/>
                         </Grid>
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>
@@ -48,3 +58,5 @@
         </Grid>
     </Grid>
 </UserControl>
+
+

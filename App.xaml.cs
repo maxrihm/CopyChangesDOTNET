@@ -1,4 +1,4 @@
-﻿using CopyChanges.LineHandlers;
+using CopyChanges.LineHandlers;
 using CopyChanges.Services;
 using CopyChanges.ViewModels;
 using CopyChanges.Views;
@@ -38,3 +38,5 @@ namespace CopyChanges
         }
     }
 }
+
+
