@@ -36,6 +36,7 @@
                                                    SyntaxHighlighting="CSharp"
                                                    FontFamily="Consolas"
                                                    FontSize="14"
+                                                   WordWrap="True"
                                                    VerticalAlignment="Stretch"
                                                    HorizontalAlignment="Stretch"
                                                    BorderBrush="Gray"
