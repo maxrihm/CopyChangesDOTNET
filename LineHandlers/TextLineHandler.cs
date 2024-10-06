@@ -14,7 +14,7 @@ namespace CopyChanges.LineHandlers
         {
             if (CanHandle(line))
             {
-                return $"{line}\n";
+                return $"{line}";
             }
 
             return PassToNext(line);

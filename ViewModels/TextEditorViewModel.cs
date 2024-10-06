@@ -49,14 +49,10 @@ namespace CopyChanges.ViewModels
                 var lines = Content.Split(new[] { "\r\n", "\r", "\n" }, System.StringSplitOptions.None);
                 var result = new StringBuilder();
 
-                // Ensure each line is being processed
                 foreach (var line in lines)
                 {
                     var processedLine = _lineHandlerChain.Handle(line);
-                    if (!string.IsNullOrEmpty(processedLine))
-                    {
-                        result.AppendLine(processedLine);
-                    }
+                    result.AppendLine(processedLine); // Append each line, including empty ones
                 }
 
                 _clipboardService.SetText(result.ToString());
