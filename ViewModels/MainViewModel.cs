@@ -95,7 +95,7 @@ namespace CopyChanges.ViewModels
         {
             if (!string.IsNullOrEmpty(ProjectDirectory))
             {
-                var vscodeExtensionAllHandler = new VSCodeExtensionAllHandler(_jsonService);
+                var vscodeExtensionAllHandler = new VSCodeExtensionAllHandler(_jsonService, ProjectDirectory);
                 var fileLineHandler = new FileLineHandler(_fileService, ProjectDirectory);
                 var referenceLineHandler = new ReferenceLineHandler(TextEditors, vscodeExtensionAllHandler);
                 var textLineHandler = new TextLineHandler();

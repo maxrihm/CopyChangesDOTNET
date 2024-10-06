@@ -1,22 +1,26 @@
 ﻿using CopyChanges.Services;
 using CopyChanges.Constants;
 using System.Collections.Generic;
+using System.IO;
 using System.Text.Json;
+using System.Linq;
 
 namespace CopyChanges.LineHandlers
 {
     public class VSCodeExtensionAllHandler : BaseLineHandler
     {
         private readonly IJsonService _jsonService;
+        private readonly string _projectDirectory;
 
-        public VSCodeExtensionAllHandler(IJsonService jsonService)
+        public VSCodeExtensionAllHandler(IJsonService jsonService, string projectDirectory)
         {
             _jsonService = jsonService;
+            _projectDirectory = projectDirectory;
         }
 
         public override bool CanHandle(string line)
         {
-            return line.Length == 1 && line == "V";  // Check if line is exactly one character and that character is 'V'
+            return line.Length == 1 && line == "V";  // Ensure it's exactly "V"
         }
 
         public override string Handle(string line)
@@ -35,16 +39,26 @@ namespace CopyChanges.LineHandlers
         {
             var result = new System.Text.StringBuilder();
 
-            foreach (var fileEntry in jsonData)
-            {
-                var filePath = fileEntry.Key;
-                var contentBlocks = JsonSerializer.Deserialize<List<ContentBlock>>(fileEntry.Value.ToString());
-
-                foreach (var block in contentBlocks)
+            // Group by file paths and combine the blocks that belong to the same file
+            var groupedFiles = jsonData
+                .Select(entry => new
                 {
-                    result.AppendLine($"Partial code of file {filePath}:");
+                    FilePath = entry.Key,
+                    Blocks = JsonSerializer.Deserialize<List<ContentBlock>>(entry.Value.ToString())
+                })
+                .GroupBy(entry => entry.FilePath);
+
+            foreach (var fileGroup in groupedFiles)
+            {
+                // Get the relative path for the file
+                var relativePath = Path.GetRelativePath(_projectDirectory, fileGroup.Key);
+
+                result.AppendLine($"Partial code of file {relativePath}:");
+
+                foreach (var block in fileGroup.SelectMany(g => g.Blocks))
+                {
                     result.AppendLine("...");
-                    result.AppendLine(block.Content);
+                    result.AppendLine(block.content); // Correctly append the content from the JSON blocks
                     result.AppendLine("...");
                 }
             }
@@ -54,9 +68,9 @@ namespace CopyChanges.LineHandlers
 
         private class ContentBlock
         {
-            public int StartLine { get; set; }
-            public int EndLine { get; set; }
-            public string Content { get; set; }
+            public int startLine { get; set; }
+            public int endLine { get; set; }
+            public string content { get; set; }
         }
     }
 }
