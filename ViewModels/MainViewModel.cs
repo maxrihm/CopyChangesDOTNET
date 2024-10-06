@@ -96,11 +96,14 @@ namespace CopyChanges.ViewModels
             if (!string.IsNullOrEmpty(ProjectDirectory))
             {
                 var vscodeExtensionAllHandler = new VSCodeExtensionAllHandler(_jsonService, ProjectDirectory);
+                var gitDiffLineHandler = new GitDiffLineHandler(ProjectDirectory);
                 var fileLineHandler = new FileLineHandler(_fileService, ProjectDirectory);
                 var referenceLineHandler = new ReferenceLineHandler(TextEditors, vscodeExtensionAllHandler);
                 var textLineHandler = new TextLineHandler();
 
-                vscodeExtensionAllHandler.SetNext(fileLineHandler);
+                // Set up the chain of responsibility
+                vscodeExtensionAllHandler.SetNext(gitDiffLineHandler);
+                gitDiffLineHandler.SetNext(fileLineHandler);
                 fileLineHandler.SetNext(referenceLineHandler);
                 referenceLineHandler.SetNext(textLineHandler);
 
