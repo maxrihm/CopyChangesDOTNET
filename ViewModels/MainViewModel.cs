@@ -1,7 +1,7 @@
 using CopyChanges.Commands;
 using CopyChanges.Helpers;
+using CopyChanges.Interfaces;
 using CopyChanges.LineHandlers;
-using CopyChanges.Services;
 using CopyChanges.Views;
 using System.Collections.ObjectModel;
 using System.Windows.Input;

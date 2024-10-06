@@ -1,4 +1,4 @@
-﻿namespace CopyChanges.Services
+﻿namespace CopyChanges.Interfaces
 {
     public interface IClipboardService
     {

@@ -1,7 +1,7 @@
 // Services/IGitService.cs
 using System.Collections.Generic;
 
-namespace CopyChanges.Services
+namespace CopyChanges.Interfaces
 {
     public interface IGitService
     {

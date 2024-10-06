@@ -1,9 +1,9 @@
-﻿using CopyChanges.Services;
-using CopyChanges.Constants;
+﻿using CopyChanges.Constants;
 using System.Collections.Generic;
 using System.IO;
 using System.Text.Json;
 using System.Linq;
+using CopyChanges.Interfaces;
 
 namespace CopyChanges.LineHandlers
 {

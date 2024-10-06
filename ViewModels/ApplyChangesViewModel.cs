@@ -1,10 +1,10 @@
 using CopyChanges.Commands;
-using CopyChanges.Services;
 using CopyChanges.Constants;
 using System.Windows.Input;
 using System.IO;
 using System.Text;
 using System.Text.RegularExpressions;
+using CopyChanges.Interfaces;
 
 namespace CopyChanges.ViewModels
 {

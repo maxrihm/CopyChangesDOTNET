@@ -1,5 +1,5 @@
 ﻿// Commands/GetGitChangesCommand.cs
-using CopyChanges.Services;
+using CopyChanges.Interfaces;
 using CopyChanges.ViewModels;
 using System;
 using System.Windows.Input;

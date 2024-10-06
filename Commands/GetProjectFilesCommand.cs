@@ -1,5 +1,4 @@
 // Commands/GetProjectFilesCommand.cs
-using CopyChanges.Services;
 using CopyChanges.ViewModels;
 using System;
 using System.Collections.Generic;
@@ -7,6 +6,7 @@ using System.IO;
 using System.Linq;
 using System.Windows.Input;
 using LibGit2Sharp;  // Using LibGit2Sharp to get files tracked by Git
+using CopyChanges.Interfaces;
 
 namespace CopyChanges.Commands
 {

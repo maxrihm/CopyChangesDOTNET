@@ -1,6 +1,6 @@
 using CopyChanges.Commands;
 using CopyChanges.Helpers;
-using CopyChanges.Services;
+using CopyChanges.Interfaces;
 using System.Windows.Input;
 
 namespace CopyChanges.ViewModels

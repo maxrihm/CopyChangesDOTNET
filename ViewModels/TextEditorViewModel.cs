@@ -1,8 +1,8 @@
 using CopyChanges.Commands;
 using CopyChanges.LineHandlers;
-using CopyChanges.Services;
 using System.Windows.Input;
 using System.Text;
+using CopyChanges.Interfaces;
 
 namespace CopyChanges.ViewModels
 {
