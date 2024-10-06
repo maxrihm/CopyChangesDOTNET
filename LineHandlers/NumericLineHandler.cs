@@ -1,7 +1,6 @@
 ﻿using CopyChanges.ViewModels;
 using System;
 using System.Collections.ObjectModel;
-using System.Linq;
 using System.Text;
 
 namespace CopyChanges.LineHandlers

@@ -95,14 +95,16 @@ namespace CopyChanges.ViewModels
         {
             if (!string.IsNullOrEmpty(ProjectDirectory))
             {
+                var vscodeExtensionAllHandler = new VSCodeExtensionAllHandler(_jsonService);
                 var fileLineHandler = new FileLineHandler(_fileService, ProjectDirectory);
                 var numericLineHandler = new NumericLineHandler(TextEditors, fileLineHandler);
                 var textLineHandler = new TextLineHandler();
 
+                vscodeExtensionAllHandler.SetNext(fileLineHandler);
                 fileLineHandler.SetNext(numericLineHandler);
                 numericLineHandler.SetNext(textLineHandler);
 
-                _lineHandlerChain = fileLineHandler;
+                _lineHandlerChain = vscodeExtensionAllHandler;
 
                 foreach (var editor in TextEditors)
                 {
@@ -110,6 +112,7 @@ namespace CopyChanges.ViewModels
                 }
             }
         }
+
 
         private void OpenApplyChangesWindow(object parameter)
         {
