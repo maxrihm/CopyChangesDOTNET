@@ -22,6 +22,7 @@ namespace CopyChanges.ViewModels
         public ICommand GetGitChangesCommand { get; }
         public ICommand GetProjectFilesCommand { get; }
         public ICommand OpenApplyChangesWindowCommand { get; }
+        public ICommand TestCommand { get; }
 
         private string _projectDirectory;
         public string ProjectDirectory
@@ -87,6 +88,7 @@ namespace CopyChanges.ViewModels
             GetGitChangesCommand = new RelayCommand(GetGitChanges, CanExecuteGitCommands);
             GetProjectFilesCommand = new GetProjectFilesCommand(this, _fileService);
             OpenApplyChangesWindowCommand = new RelayCommand(OpenApplyChangesWindow);
+            TestCommand = new RelayCommand(TestMethod);
         }
 
         private void SetupLineHandlerChain()
@@ -153,6 +155,14 @@ namespace CopyChanges.ViewModels
         private void UpdateCurrentProjectLabel()
         {
             CurrentProjectLabel = string.IsNullOrEmpty(ProjectDirectory) ? "No project loaded" : $"Current Project: {ProjectDirectory}";
+        }
+
+        private void TestMethod(object parameter)
+        {
+            if (TextEditors.Count > 0)
+            {
+                TextEditors[0].Content = "abc";
+            }
         }
     }
 }

@@ -1,6 +1,5 @@
 using System.Windows.Controls;
 using ICSharpCode.AvalonEdit;
-using System.Windows;
 using System.Windows.Data;
 using CopyChanges.ViewModels;
 
@@ -13,12 +12,18 @@ namespace CopyChanges.Views
             InitializeComponent();
         }
 
-        private void AvalonTextEditor_OnTextChanged(object sender, System.EventArgs e)
+        private void AvalonTextEditor_Loaded(object sender, System.Windows.RoutedEventArgs e)
         {
-            var textEditor = sender as TextEditor;
-            if (textEditor != null && textEditor.DataContext is TextEditorViewModel viewModel)
+            if (sender is TextEditor textEditor)
             {
-                viewModel.Content = textEditor.Text;
+                var textBinding = new Binding("Content")
+                {
+                    Source = textEditor.DataContext,
+                    Mode = BindingMode.TwoWay,
+                    UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged
+                };
+
+                textEditor.SetBinding(TextEditorHelper.BindableDocumentTextProperty, textBinding);
             }
         }
     }

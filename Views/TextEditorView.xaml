@@ -4,21 +4,7 @@
              xmlns:viewmodels="clr-namespace:CopyChanges.ViewModels"
              xmlns:avalonedit="http://icsharpcode.net/sharpdevelop/avalonedit">
     <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="*" />
-        </Grid.RowDefinitions>
-
-        <!-- StackPanel for controls -->
-        <StackPanel Orientation="Horizontal" Grid.Row="0" HorizontalAlignment="Left">
-            <Button Content="Browse Project Directory" Command="{Binding BrowseProjectDirectoryCommand}" />
-            <Button Content="Get Git Changes (Editor 1)" Command="{Binding GetGitChangesCommand}" />
-            <Button Content="Get Project Files" Command="{Binding GetProjectFilesCommand}" />
-            <TextBlock Text="{Binding StatusMessage}" Margin="10,0,0,0" VerticalAlignment="Center" />
-        </StackPanel>
-
-        <!-- Editors section -->
-        <Grid Grid.Row="1" Margin="5">
+        <Grid Margin="5">
             <ItemsControl ItemsSource="{Binding TextEditors}">
                 <ItemsControl.ItemsPanel>
                     <ItemsPanelTemplate>
@@ -28,8 +14,8 @@
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
                         <Grid Margin="5">
-                            <!-- AvalonEdit for displaying and editing content -->
-                            <avalonedit:TextEditor x:Name="avalonTextEditor"
+                            <!-- AvalonEdit control -->
+                            <avalonedit:TextEditor x:Name="AvalonTextEditor"
                                                    HorizontalScrollBarVisibility="Auto"
                                                    VerticalScrollBarVisibility="Auto"
                                                    ShowLineNumbers="True"
@@ -41,14 +27,15 @@
                                                    HorizontalAlignment="Stretch"
                                                    BorderBrush="Gray"
                                                    BorderThickness="1"
-                                                   TextChanged="AvalonTextEditor_OnTextChanged"/>
+                                                   Loaded="AvalonTextEditor_Loaded"
+                                                   />
 
-                            <!-- Button for copying plain text (file names, etc.) -->
+                            <!-- Copy button -->
                             <Button Content="Copy" Command="{Binding CopyContentCommand}"
                                     HorizontalAlignment="Right"
                                     VerticalAlignment="Bottom" Margin="5"/>
 
-                            <!-- Label showing the editor number in the top-right corner -->
+                            <!-- Editor number label -->
                             <TextBlock Text="{Binding EditorNumber}"
                                        HorizontalAlignment="Right"
                                        VerticalAlignment="Top"

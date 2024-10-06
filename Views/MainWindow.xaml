@@ -5,7 +5,22 @@
         xmlns:viewmodels="clr-namespace:CopyChanges.ViewModels"
         Title="CopyChanges" Height="900" Width="1500">
     <Grid>
-        <TabControl>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <!-- StackPanel for controls -->
+        <StackPanel Orientation="Horizontal" Grid.Row="0" HorizontalAlignment="Left">
+            <Button Content="Browse Project Directory" Command="{Binding BrowseProjectDirectoryCommand}" />
+            <Button Content="Get Git Changes (Editor 1)" Command="{Binding GetGitChangesCommand}" />
+            <Button Content="Get Project Files" Command="{Binding GetProjectFilesCommand}" />
+            <Button Content="Test" Command="{Binding TestCommand}" />
+            <TextBlock Text="{Binding StatusMessage}" Margin="10,0,0,0" VerticalAlignment="Center" />
+        </StackPanel>
+
+        <!-- TabControl for views -->
+        <TabControl Grid.Row="1">
             <TabItem Header="Text Editors">
                 <local:TextEditorView />
             </TabItem>
@@ -13,10 +28,12 @@
                 <local:FileBrowserView />
             </TabItem>
         </TabControl>
+
         <!-- New Label to display current project -->
         <TextBlock Text="{Binding CurrentProjectLabel}"
                    HorizontalAlignment="Left" VerticalAlignment="Top"
                    Margin="10,10,0,0" FontWeight="Bold" FontSize="16"/>
+
         <Button Content="Apply Changes" Command="{Binding OpenApplyChangesWindowCommand}" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="10"/>
     </Grid>
 </Window>
