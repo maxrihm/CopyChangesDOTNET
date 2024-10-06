@@ -33,7 +33,7 @@
                             <!-- Copy button -->
                             <Button Content="Copy" Command="{Binding CopyContentCommand}"
                                     HorizontalAlignment="Right"
-                                    VerticalAlignment="Bottom" Margin="5"/>
+                                    VerticalAlignment="Bottom" Margin="0,0,5,5"/>
 
                             <!-- Editor number label -->
                             <TextBlock Text="{Binding EditorNumber}"
@@ -42,7 +42,7 @@
                                        FontWeight="Bold"
                                        Foreground="Gray"
                                        FontSize="16"
-                                       Margin="5"/>
+                                       Margin="0,5,10,0"/>
                         </Grid>
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>
