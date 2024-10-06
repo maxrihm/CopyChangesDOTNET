@@ -8,14 +8,15 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
         <!-- StackPanel for controls -->
         <StackPanel Orientation="Horizontal" Grid.Row="0" HorizontalAlignment="Left">
-            <Button Content="Browse Project Directory" Command="{Binding BrowseProjectDirectoryCommand}" />
-            <Button Content="Get Git Changes (Editor 1)" Command="{Binding GetGitChangesCommand}" />
-            <Button Content="Get Project Files" Command="{Binding GetProjectFilesCommand}" />
-            <Button Content="Test" Command="{Binding TestCommand}" />
+            <Button Content="Browse Project Directory" Command="{Binding BrowseProjectDirectoryCommand}" Height="25" />
+            <Button Content="Get Git Changes (Editor 1)" Command="{Binding GetGitChangesCommand}" Height="25" />
+            <Button Content="Get Project Files" Command="{Binding GetProjectFilesCommand}" Height="25" />
+            <Button Content="Test" Command="{Binding TestCommand}" Height="25" />
             <TextBlock Text="{Binding StatusMessage}" Margin="10,0,0,0" VerticalAlignment="Center" />
         </StackPanel>
 
@@ -29,11 +30,13 @@
             </TabItem>
         </TabControl>
 
-        <!-- New Label to display current project -->
-        <TextBlock Text="{Binding CurrentProjectLabel}"
-                   HorizontalAlignment="Left" VerticalAlignment="Top"
-                   Margin="10,10,0,0" FontWeight="Bold" FontSize="16"/>
-
-        <Button Content="Apply Changes" Command="{Binding OpenApplyChangesWindowCommand}" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="10"/>
+        <!-- Apply Changes button and project label -->
+        <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right" Margin="10">
+            <Button Content="Apply Changes" Command="{Binding OpenApplyChangesWindowCommand}" Margin="0,0,10,0" />
+            <TextBlock Text="{Binding CurrentProjectLabel}"
+                       HorizontalAlignment="Right"
+                       TextTrimming="CharacterEllipsis"
+                       FontWeight="Bold" FontSize="16"/>
+        </StackPanel>
     </Grid>
 </Window>
