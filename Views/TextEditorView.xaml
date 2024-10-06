@@ -19,7 +19,6 @@
                                                    HorizontalScrollBarVisibility="Auto"
                                                    VerticalScrollBarVisibility="Auto"
                                                    ShowLineNumbers="True"
-                                                   SyntaxHighlighting="CSharp"
                                                    FontFamily="Consolas"
                                                    FontSize="14"
                                                    WordWrap="True"
@@ -33,7 +32,7 @@
                             <!-- Copy button -->
                             <Button Content="Copy" Command="{Binding CopyContentCommand}"
                                     HorizontalAlignment="Right"
-                                    VerticalAlignment="Bottom" Margin="0,0,5,5"/>
+                                    VerticalAlignment="Bottom" Margin="0,0,25,5"/>
 
                             <!-- Editor number label -->
                             <TextBlock Text="{Binding EditorNumber}"
@@ -42,7 +41,7 @@
                                        FontWeight="Bold"
                                        Foreground="Gray"
                                        FontSize="16"
-                                       Margin="0,5,10,0"/>
+                                       Margin="0,0,25,0"/>
                         </Grid>
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>
