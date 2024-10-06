@@ -5,12 +5,12 @@ using System.Text;
 
 namespace CopyChanges.LineHandlers
 {
-    public class NumericLineHandler : BaseLineHandler
+    public class ReferenceLineHandler : BaseLineHandler
     {
         private readonly ObservableCollection<TextEditorViewModel> _textEditors;
         private readonly BaseLineHandler _lineHandlerChain;
 
-        public NumericLineHandler(ObservableCollection<TextEditorViewModel> textEditors, BaseLineHandler lineHandlerChain)
+        public ReferenceLineHandler(ObservableCollection<TextEditorViewModel> textEditors, BaseLineHandler lineHandlerChain)
         {
             _textEditors = textEditors;
             _lineHandlerChain = lineHandlerChain;
@@ -26,18 +26,15 @@ namespace CopyChanges.LineHandlers
             if (CanHandle(line))
             {
                 int index = int.Parse(line) - 1;
+
                 if (index < _textEditors.Count)
                 {
                     var referencedContent = _textEditors[index].Content;
-                    var result = new StringBuilder();
 
-                    var lines = referencedContent.Split(new[] { "\r\n", "\r", "\n" }, StringSplitOptions.None);
-                    foreach (var referencedLine in lines)
-                    {
-                        result.AppendLine(_lineHandlerChain.Handle(referencedLine));
-                    }
+                    // Recursively process the referenced window's content, resolving things like `V`
+                    var result = ProcessReferencedContent(referencedContent);
 
-                    return result.ToString();
+                    return result;
                 }
                 else
                 {
@@ -46,6 +43,21 @@ namespace CopyChanges.LineHandlers
             }
 
             return PassToNext(line);
+        }
+
+        private string ProcessReferencedContent(string referencedContent)
+        {
+            var result = new StringBuilder();
+
+            // Split the referenced content into lines and recursively process them through the handler chain
+            var lines = referencedContent.Split(new[] { "\r\n", "\r", "\n" }, StringSplitOptions.None);
+            foreach (var referencedLine in lines)
+            {
+                // Recursively pass each line back through the entire chain
+                result.AppendLine(_lineHandlerChain.Handle(referencedLine));
+            }
+
+            return result.ToString();
         }
     }
 }

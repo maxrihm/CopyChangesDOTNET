@@ -97,12 +97,12 @@ namespace CopyChanges.ViewModels
             {
                 var vscodeExtensionAllHandler = new VSCodeExtensionAllHandler(_jsonService);
                 var fileLineHandler = new FileLineHandler(_fileService, ProjectDirectory);
-                var numericLineHandler = new NumericLineHandler(TextEditors, fileLineHandler);
+                var referenceLineHandler = new ReferenceLineHandler(TextEditors, vscodeExtensionAllHandler);
                 var textLineHandler = new TextLineHandler();
 
                 vscodeExtensionAllHandler.SetNext(fileLineHandler);
-                fileLineHandler.SetNext(numericLineHandler);
-                numericLineHandler.SetNext(textLineHandler);
+                fileLineHandler.SetNext(referenceLineHandler);
+                referenceLineHandler.SetNext(textLineHandler);
 
                 _lineHandlerChain = vscodeExtensionAllHandler;
 
