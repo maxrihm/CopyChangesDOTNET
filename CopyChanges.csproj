@@ -6,7 +6,12 @@
     <Nullable>enable</Nullable>
     <UseWPF>true</UseWPF>
 	  <UseWindowsForms>true</UseWindowsForms>
+	  <ApplicationIcon>copy_23057.ico</ApplicationIcon>
   </PropertyGroup>
+
+  <ItemGroup>
+    <Content Include="copy_23057.ico" />
+  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="AvalonEdit" Version="6.3.0.90" />
