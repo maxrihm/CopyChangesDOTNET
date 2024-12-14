@@ -33,6 +33,9 @@ namespace CopyChanges
             services.AddSingleton<IJsonService, JsonService>();
             services.AddSingleton<IClipboardService, ClipboardService>();
 
+            // New message service for handling and displaying status/error messages
+            services.AddSingleton<IMessageService, MessageService>();
+
             services.AddSingleton<MainViewModel>();
 
             services.AddTransient<MainWindow>();

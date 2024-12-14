@@ -13,6 +13,7 @@ namespace CopyChanges.ViewModels
         private readonly IGitService _gitService;
         private readonly IJsonService _jsonService;
         private readonly IClipboardService _clipboardService;
+        private readonly IMessageService _messageService;
         private BaseLineHandler _lineHandlerChain;
 
         public ObservableCollection<TextEditorViewModel> TextEditors { get; }
@@ -57,6 +58,17 @@ namespace CopyChanges.ViewModels
             }
         }
 
+        private string _errorMessage;
+        public string ErrorMessage
+        {
+            get => _errorMessage;
+            set
+            {
+                _errorMessage = value;
+                OnPropertyChanged();
+            }
+        }
+
         private string _currentProjectLabel;
         public string CurrentProjectLabel
         {
@@ -68,25 +80,39 @@ namespace CopyChanges.ViewModels
             }
         }
 
-        public MainViewModel(IFileService fileService, IGitService gitService, IJsonService jsonService, IClipboardService clipboardService)
+        public MainViewModel(IFileService fileService,
+                             IGitService gitService,
+                             IJsonService jsonService,
+                             IClipboardService clipboardService,
+                             IMessageService messageService)
         {
             _fileService = fileService;
             _gitService = gitService;
             _jsonService = jsonService;
             _clipboardService = clipboardService;
+            _messageService = messageService;
 
             TextEditors = new ObservableCollection<TextEditorViewModel>();
 
+            // Properly passing editorNumber now
             for (int i = 0; i < 9; i++)
             {
-                TextEditors.Add(new TextEditorViewModel(_lineHandlerChain, clipboardService, i + 1));
+                TextEditors.Add(new TextEditorViewModel(
+                    _lineHandlerChain,
+                    _clipboardService,
+                    _messageService,
+                    i + 1));
             }
 
             BrowseProjectDirectoryCommand = new RelayCommand(BrowseProjectDirectory);
             GetGitChangesCommand = new RelayCommand(GetGitChanges, CanExecuteGitCommands);
             GetProjectFilesCommand = new GetProjectFilesCommand(this, _fileService);
             TestCommand = new RelayCommand(TestMethod);
+
+            _messageService.StatusMessageChanged += (s, msg) => StatusMessage = msg;
+            _messageService.ErrorMessageChanged += (s, msg) => ErrorMessage = msg;
         }
+
 
         private void SetupLineHandlerChain()
         {
@@ -118,10 +144,11 @@ namespace CopyChanges.ViewModels
             if (!string.IsNullOrEmpty(directory))
             {
                 ProjectDirectory = directory;
+                _messageService.ShowStatusMessage("Project directory selected.");
             }
             else
             {
-                StatusMessage = "No directory selected.";
+                _messageService.ShowStatusMessage("No directory selected.");
             }
         }
 
@@ -139,7 +166,7 @@ namespace CopyChanges.ViewModels
                 TextEditors[0].Content = string.Join("\n", changes);
             }
 
-            StatusMessage = "Git changes loaded into editor 1.";
+            _messageService.ShowStatusMessage("Git changes loaded into editor 1.");
         }
 
         private void UpdateCurrentProjectLabel()
@@ -152,6 +179,7 @@ namespace CopyChanges.ViewModels
             if (TextEditors.Count > 0)
             {
                 TextEditors[0].Content = "abc";
+                _messageService.ShowStatusMessage("Test content added to editor 1.");
             }
         }
     }

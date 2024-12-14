@@ -12,10 +12,15 @@
         </Grid.RowDefinitions>
 
         <StackPanel Orientation="Horizontal" Grid.Row="0" HorizontalAlignment="Left">
-            <Button Content="Get Git Changes (Editor 1)" Command="{Binding GetGitChangesCommand}" Height="25" />
-            <Button Content="Get Project Files" Command="{Binding GetProjectFilesCommand}" Height="25" />
-            <Button Content="Test" Command="{Binding TestCommand}" Height="25" />
-            <TextBlock Text="{Binding StatusMessage}" Margin="10,0,0,0" VerticalAlignment="Center" />
+            <Button Content="Get Git Changes (Editor 1)" Command="{Binding GetGitChangesCommand}" Height="25" Margin="5"/>
+            <Button Content="Get Project Files" Command="{Binding GetProjectFilesCommand}" Height="25" Margin="5"/>
+            <Button Content="Test" Command="{Binding TestCommand}" Height="25" Margin="5"/>
+            
+            <!-- Normal status messages -->
+            <TextBlock Text="{Binding StatusMessage}" Margin="10,0,0,0" VerticalAlignment="Center"/>
+            
+            <!-- Error messages (in red) -->
+            <TextBlock Text="{Binding ErrorMessage}" Margin="10,0,0,0" VerticalAlignment="Center" Foreground="Red"/>
         </StackPanel>
 
         <TabControl Grid.Row="1">
