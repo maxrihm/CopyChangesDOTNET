@@ -14,6 +14,8 @@ namespace CopyChanges.ViewModels
         private readonly IJsonService _jsonService;
         private readonly IClipboardService _clipboardService;
         private readonly IMessageService _messageService;
+        private readonly ILineHandlerChainFactory _lineHandlerChainFactory;
+
         private BaseLineHandler _lineHandlerChain;
 
         public ObservableCollection<TextEditorViewModel> TextEditors { get; }
@@ -84,24 +86,22 @@ namespace CopyChanges.ViewModels
                              IGitService gitService,
                              IJsonService jsonService,
                              IClipboardService clipboardService,
-                             IMessageService messageService)
+                             IMessageService messageService,
+                             ILineHandlerChainFactory lineHandlerChainFactory)
         {
             _fileService = fileService;
             _gitService = gitService;
             _jsonService = jsonService;
             _clipboardService = clipboardService;
             _messageService = messageService;
+            _lineHandlerChainFactory = lineHandlerChainFactory;
 
             TextEditors = new ObservableCollection<TextEditorViewModel>();
 
-            // Properly passing editorNumber now
+            // Initialize text editors with no chain yet. Will be updated after project directory is set.
             for (int i = 0; i < 9; i++)
             {
-                TextEditors.Add(new TextEditorViewModel(
-                    _lineHandlerChain,
-                    _clipboardService,
-                    _messageService,
-                    i + 1));
+                TextEditors.Add(new TextEditorViewModel(null, _clipboardService, _messageService, i + 1));
             }
 
             BrowseProjectDirectoryCommand = new RelayCommand(BrowseProjectDirectory);
@@ -111,28 +111,17 @@ namespace CopyChanges.ViewModels
 
             _messageService.StatusMessageChanged += (s, msg) => StatusMessage = msg;
             _messageService.ErrorMessageChanged += (s, msg) => ErrorMessage = msg;
-        }
 
+            SetupLineHandlerChain();
+        }
 
         private void SetupLineHandlerChain()
         {
-            if (!string.IsNullOrEmpty(ProjectDirectory))
+            _lineHandlerChain = _lineHandlerChainFactory.CreateChain(ProjectDirectory, TextEditors);
+
+            foreach (var editor in TextEditors)
             {
-                var vscodeExtensionAllHandler = new VSCodeExtensionAllHandler(_jsonService, ProjectDirectory);
-                var fileLineHandler = new FileLineHandler(_fileService, ProjectDirectory);
-                var referenceLineHandler = new ReferenceLineHandler(TextEditors, vscodeExtensionAllHandler);
-                var textLineHandler = new TextLineHandler();
-
-                vscodeExtensionAllHandler.SetNext(fileLineHandler);
-                fileLineHandler.SetNext(referenceLineHandler);
-                referenceLineHandler.SetNext(textLineHandler);
-
-                _lineHandlerChain = vscodeExtensionAllHandler;
-
-                foreach (var editor in TextEditors)
-                {
-                    editor.UpdateLineHandlerChain(_lineHandlerChain);
-                }
+                editor.UpdateLineHandlerChain(_lineHandlerChain);
             }
         }
 
@@ -159,6 +148,12 @@ namespace CopyChanges.ViewModels
 
         private void GetGitChanges(object parameter)
         {
+            if (string.IsNullOrEmpty(ProjectDirectory))
+            {
+                _messageService.ShowError("No project directory selected.");
+                return;
+            }
+
             var changes = _gitService.GetGitChanges(ProjectDirectory);
 
             if (TextEditors.Count > 0)

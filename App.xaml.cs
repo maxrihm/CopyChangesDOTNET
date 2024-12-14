@@ -36,6 +36,9 @@ namespace CopyChanges
             // New message service for handling and displaying status/error messages
             services.AddSingleton<IMessageService, MessageService>();
 
+            // Register the line handler chain factory
+            services.AddSingleton<ILineHandlerChainFactory, LineHandlerChainFactory>();
+
             services.AddSingleton<MainViewModel>();
 
             services.AddTransient<MainWindow>();
