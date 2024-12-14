@@ -11,32 +11,22 @@
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
-        <!-- StackPanel for top buttons -->
         <StackPanel Orientation="Horizontal" Grid.Row="0" HorizontalAlignment="Left">
             <Button Content="Get Git Changes (Editor 1)" Command="{Binding GetGitChangesCommand}" Height="25" />
             <Button Content="Get Project Files" Command="{Binding GetProjectFilesCommand}" Height="25" />
             <Button Content="Test" Command="{Binding TestCommand}" Height="25" />
-            <Button Content="Apply Changes" Command="{Binding OpenApplyChangesWindowCommand}" Height="25" />
             <TextBlock Text="{Binding StatusMessage}" Margin="10,0,0,0" VerticalAlignment="Center" />
         </StackPanel>
 
-        <!-- TabControl for views -->
         <TabControl Grid.Row="1">
             <TabItem Header="Text Editors">
                 <local:TextEditorView />
             </TabItem>
-            <TabItem Header="File Browser">
-                <local:FileBrowserView />
-            </TabItem>
         </TabControl>
 
-        <!-- Bottom section with Browse Project Directory and Current Project Label -->
         <Grid Grid.Row="2">
-            <!-- Browse Project button aligned to the bottom left -->
             <Button Content="Browse Project Directory" Command="{Binding BrowseProjectDirectoryCommand}" 
                     HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="10"/>
-
-            <!-- Current Project aligned to the bottom right -->
             <TextBlock Text="{Binding CurrentProjectLabel}"
                        HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="10"
                        TextTrimming="CharacterEllipsis"

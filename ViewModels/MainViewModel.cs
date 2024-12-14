@@ -2,7 +2,6 @@ using CopyChanges.Commands;
 using CopyChanges.Helpers;
 using CopyChanges.Interfaces;
 using CopyChanges.LineHandlers;
-using CopyChanges.Views;
 using System.Collections.ObjectModel;
 using System.Windows.Input;
 
@@ -21,7 +20,6 @@ namespace CopyChanges.ViewModels
         public ICommand BrowseProjectDirectoryCommand { get; }
         public ICommand GetGitChangesCommand { get; }
         public ICommand GetProjectFilesCommand { get; }
-        public ICommand OpenApplyChangesWindowCommand { get; }
         public ICommand TestCommand { get; }
 
         private string _projectDirectory;
@@ -87,7 +85,6 @@ namespace CopyChanges.ViewModels
             BrowseProjectDirectoryCommand = new RelayCommand(BrowseProjectDirectory);
             GetGitChangesCommand = new RelayCommand(GetGitChanges, CanExecuteGitCommands);
             GetProjectFilesCommand = new GetProjectFilesCommand(this, _fileService);
-            OpenApplyChangesWindowCommand = new RelayCommand(OpenApplyChangesWindow);
             TestCommand = new RelayCommand(TestMethod);
         }
 
@@ -96,14 +93,11 @@ namespace CopyChanges.ViewModels
             if (!string.IsNullOrEmpty(ProjectDirectory))
             {
                 var vscodeExtensionAllHandler = new VSCodeExtensionAllHandler(_jsonService, ProjectDirectory);
-                var gitDiffLineHandler = new GitDiffLineHandler(ProjectDirectory);
                 var fileLineHandler = new FileLineHandler(_fileService, ProjectDirectory);
                 var referenceLineHandler = new ReferenceLineHandler(TextEditors, vscodeExtensionAllHandler);
                 var textLineHandler = new TextLineHandler();
 
-                // Set up the chain of responsibility
-                vscodeExtensionAllHandler.SetNext(gitDiffLineHandler);
-                gitDiffLineHandler.SetNext(fileLineHandler);
+                vscodeExtensionAllHandler.SetNext(fileLineHandler);
                 fileLineHandler.SetNext(referenceLineHandler);
                 referenceLineHandler.SetNext(textLineHandler);
 
@@ -114,16 +108,6 @@ namespace CopyChanges.ViewModels
                     editor.UpdateLineHandlerChain(_lineHandlerChain);
                 }
             }
-        }
-
-
-        private void OpenApplyChangesWindow(object parameter)
-        {
-            var window = new ApplyChangesWindow
-            {
-                DataContext = new ApplyChangesViewModel(_fileService, ProjectDirectory)
-            };
-            window.Show();
         }
 
         private void BrowseProjectDirectory(object parameter)
