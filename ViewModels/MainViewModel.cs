@@ -98,7 +98,6 @@ namespace CopyChanges.ViewModels
 
             TextEditors = new ObservableCollection<TextEditorViewModel>();
 
-            // Initialize text editors with no chain yet. Will be updated after project directory is set.
             for (int i = 0; i < 9; i++)
             {
                 TextEditors.Add(new TextEditorViewModel(null, _clipboardService, _messageService, i + 1));
@@ -112,6 +111,7 @@ namespace CopyChanges.ViewModels
             _messageService.StatusMessageChanged += (s, msg) => StatusMessage = msg;
             _messageService.ErrorMessageChanged += (s, msg) => ErrorMessage = msg;
 
+            // Set up the chain even initially (no project directory yet)
             SetupLineHandlerChain();
         }
 

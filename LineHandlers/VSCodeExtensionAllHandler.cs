@@ -4,6 +4,7 @@ using System.IO;
 using System.Text.Json;
 using System.Linq;
 using CopyChanges.Interfaces;
+using System.Text;
 
 namespace CopyChanges.LineHandlers
 {
@@ -27,7 +28,7 @@ namespace CopyChanges.LineHandlers
         {
             if (CanHandle(line))
             {
-                var jsonData = _jsonService.LoadJsonFile(PathConstants.JsonFilePath);  // Use constant for JSON file path
+                var jsonData = _jsonService.LoadJsonFile(PathConstants.JsonFilePath);
                 var result = ProcessJsonData(jsonData);
                 return result;
             }
@@ -37,7 +38,7 @@ namespace CopyChanges.LineHandlers
 
         private string ProcessJsonData(Dictionary<string, object> jsonData)
         {
-            var result = new System.Text.StringBuilder();
+            var result = new StringBuilder();
 
             // Group by file paths and combine the blocks that belong to the same file
             var groupedFiles = jsonData
@@ -50,10 +51,20 @@ namespace CopyChanges.LineHandlers
 
             foreach (var fileGroup in groupedFiles)
             {
-                // Get the relative path for the file
-                var relativePath = Path.GetRelativePath(_projectDirectory, fileGroup.Key);
+                // If we have a project directory, we try to get a relative path.
+                // Otherwise, we just use the full path.
+                string displayedPath;
+                if (!string.IsNullOrEmpty(_projectDirectory))
+                {
+                    displayedPath = Path.GetRelativePath(_projectDirectory, fileGroup.Key);
+                }
+                else
+                {
+                    // No project directory: just show the full path
+                    displayedPath = fileGroup.Key;
+                }
 
-                result.AppendLine($"Partial code of file {relativePath}:");
+                result.AppendLine($"Partial code of file {displayedPath}:");
 
                 foreach (var block in fileGroup.SelectMany(g => g.Blocks))
                 {
