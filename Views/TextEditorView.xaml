@@ -2,7 +2,10 @@
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:viewmodels="clr-namespace:CopyChanges.ViewModels"
-             xmlns:avalonedit="http://icsharpcode.net/sharpdevelop/avalonedit">
+             xmlns:avalonedit="http://icsharpcode.net/sharpdevelop/avalonedit"
+             xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+             xmlns:behaviors="clr-namespace:CopyChanges.Behaviors"
+             >
     <Grid>
         <Grid Margin="5">
             <ItemsControl ItemsSource="{Binding TextEditors}">
@@ -26,8 +29,12 @@
                                                    HorizontalAlignment="Stretch"
                                                    BorderBrush="Gray"
                                                    BorderThickness="1"
-                                                   Loaded="AvalonTextEditor_Loaded"
-                                                   />
+                                                   Loaded="AvalonTextEditor_Loaded">
+                                <i:Interaction.Behaviors>
+                                    <!-- Attach the behavior for clearing text on right-click -->
+                                    <behaviors:ClearOnRightClickBehavior />
+                                </i:Interaction.Behaviors>
+                            </avalonedit:TextEditor>
 
                             <!-- Copy button -->
                             <Button Content="Copy" Command="{Binding CopyContentCommand}"

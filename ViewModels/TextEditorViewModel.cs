@@ -28,13 +28,18 @@ namespace CopyChanges.ViewModels
         }
 
         public ICommand CopyContentCommand { get; }
+        
+        // New Command for clearing content
+        public ICommand ClearContentCommand { get; }
 
         public TextEditorViewModel(BaseLineHandler lineHandlerChain, IClipboardService clipboardService, int editorNumber)
         {
             _lineHandlerChain = lineHandlerChain;
             _clipboardService = clipboardService;
             EditorNumber = editorNumber;
+
             CopyContentCommand = new RelayCommand(CopyContent);
+            ClearContentCommand = new RelayCommand(ClearContent);
         }
 
         public void UpdateLineHandlerChain(BaseLineHandler newChain)
@@ -57,6 +62,12 @@ namespace CopyChanges.ViewModels
 
                 _clipboardService.SetText(result.ToString());
             }
+        }
+
+        private void ClearContent(object parameter)
+        {
+            // Simply clear the content
+            Content = string.Empty;
         }
     }
 }
