@@ -41,14 +41,17 @@
                                     HorizontalAlignment="Right"
                                     VerticalAlignment="Bottom" Margin="0,0,25,5"/>
 
-                            <!-- Editor number label -->
-                            <TextBlock Text="{Binding EditorNumber}"
-                                       HorizontalAlignment="Right"
-                                       VerticalAlignment="Top"
-                                       FontWeight="Bold"
-                                       Foreground="Gray"
-                                       FontSize="16"
-                                       Margin="0,0,25,0"/>
+                            <!-- Editor number label with background box -->
+                            <Border Background="White" 
+                                    HorizontalAlignment="Right" 
+                                    VerticalAlignment="Top" 
+                                    Margin="0,1,20,0" 
+                                    Padding="5,2">
+                                <TextBlock Text="{Binding EditorNumber}"
+                                           FontWeight="Bold"
+                                           Foreground="Gray"
+                                           FontSize="16"/>
+                            </Border>
                         </Grid>
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>
