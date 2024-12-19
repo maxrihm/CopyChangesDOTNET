@@ -29,12 +29,17 @@ namespace CopyChanges.LineHandlers
 
                 if (index < _textEditors.Count)
                 {
-                    var referencedContent = _textEditors[index].Content;
+                    var referencedEditor = _textEditors[index];
+                    var referencedContent = referencedEditor.Content ?? string.Empty;
 
-                    // Recursively process the referenced window's content, resolving things like `V`
-                    var result = ProcessReferencedContent(referencedContent);
-
-                    return result;
+                    if (referencedEditor.IsPlainTextMode)
+                    {
+                        return referencedContent;
+                    }
+                    else
+                    {
+                        return ProcessReferencedContent(referencedContent);
+                    }
                 }
                 else
                 {
@@ -48,12 +53,10 @@ namespace CopyChanges.LineHandlers
         private string ProcessReferencedContent(string referencedContent)
         {
             var result = new StringBuilder();
-
-            // Split the referenced content into lines and recursively process them through the handler chain
             var lines = referencedContent.Split(new[] { "\r\n", "\r", "\n" }, StringSplitOptions.None);
+
             foreach (var referencedLine in lines)
             {
-                // Recursively pass each line back through the entire chain
                 result.AppendLine(_lineHandlerChain.Handle(referencedLine));
             }
 

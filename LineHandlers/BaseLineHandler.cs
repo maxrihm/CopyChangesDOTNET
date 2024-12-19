@@ -4,6 +4,8 @@
     {
         protected BaseLineHandler NextHandler;
 
+                protected bool IsPlainTextMode { get; private set; }
+
         public void SetNext(BaseLineHandler nextHandler)
         {
             NextHandler = nextHandler;
@@ -15,7 +17,12 @@
 
         protected string PassToNext(string line)
         {
-            return NextHandler != null ? NextHandler.Handle(line) : string.Empty;
+            return NextHandler != null ? NextHandler.Handle(line) : line;
+        }
+        public void SetIsPlainTextMode(bool isPlainText)
+        {
+            IsPlainTextMode = isPlainText;
+            NextHandler?.SetIsPlainTextMode(isPlainText);
         }
     }
 }

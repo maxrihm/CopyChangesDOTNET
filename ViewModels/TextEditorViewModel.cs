@@ -12,6 +12,7 @@ namespace CopyChanges.ViewModels
         private BaseLineHandler _lineHandlerChain;
         private readonly IClipboardService _clipboardService;
         private readonly IMessageService _messageService;
+        private bool _isPlainTextMode;
 
         public int EditorNumber { get; set; }
 
@@ -28,13 +29,26 @@ namespace CopyChanges.ViewModels
             }
         }
 
+        public bool IsPlainTextMode
+        {
+            get => _isPlainTextMode;
+            set
+            {
+                if (_isPlainTextMode != value)
+                {
+                    _isPlainTextMode = value;
+                    OnPropertyChanged();
+
+                    _lineHandlerChain?.SetIsPlainTextMode(_isPlainTextMode);
+                }
+            }
+        }
+
         public ICommand CopyContentCommand { get; }
-        
-        // New Command for clearing content
         public ICommand ClearContentCommand { get; }
 
-        public TextEditorViewModel(BaseLineHandler lineHandlerChain, 
-                                   IClipboardService clipboardService, 
+        public TextEditorViewModel(BaseLineHandler lineHandlerChain,
+                                   IClipboardService clipboardService,
                                    IMessageService messageService,
                                    int editorNumber)
         {
@@ -50,6 +64,7 @@ namespace CopyChanges.ViewModels
         public void UpdateLineHandlerChain(BaseLineHandler newChain)
         {
             _lineHandlerChain = newChain;
+            _lineHandlerChain.SetIsPlainTextMode(_isPlainTextMode);
         }
 
         private void CopyContent(object parameter)

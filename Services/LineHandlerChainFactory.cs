@@ -18,13 +18,11 @@ namespace CopyChanges.Services
 
         public BaseLineHandler CreateChain(string projectDirectory, ObservableCollection<TextEditorViewModel> textEditors)
         {
-            // Always create the full chain regardless of whether projectDirectory is null or not.
             var vscodeExtensionAllHandler = new VSCodeExtensionAllHandler(_jsonService, projectDirectory);
             var fileLineHandler = new FileLineHandler(_fileService, projectDirectory);
             var referenceLineHandler = new ReferenceLineHandler(textEditors, vscodeExtensionAllHandler);
             var textLineHandler = new TextLineHandler();
 
-            // Chain setup
             vscodeExtensionAllHandler.SetNext(fileLineHandler);
             fileLineHandler.SetNext(referenceLineHandler);
             referenceLineHandler.SetNext(textLineHandler);

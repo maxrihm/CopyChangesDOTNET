@@ -5,7 +5,7 @@
              xmlns:avalonedit="http://icsharpcode.net/sharpdevelop/avalonedit"
              xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
              xmlns:behaviors="clr-namespace:CopyChanges.Behaviors"
-             >
+    >
     <Grid>
         <Grid Margin="5">
             <ItemsControl ItemsSource="{Binding TextEditors}">
@@ -17,7 +17,6 @@
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
                         <Grid Margin="5">
-                            <!-- AvalonEdit control -->
                             <avalonedit:TextEditor x:Name="AvalonTextEditor"
                                                    HorizontalScrollBarVisibility="Auto"
                                                    VerticalScrollBarVisibility="Auto"
@@ -30,18 +29,29 @@
                                                    BorderBrush="Gray"
                                                    BorderThickness="1"
                                                    Loaded="AvalonTextEditor_Loaded">
+                                <avalonedit:TextEditor.Resources>
+                                    <Style TargetType="avalonedit:TextEditor">
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding IsPlainTextMode}" Value="True">
+                                                <Setter Property="Background" Value="#FFFFF2A6"/>
+                                                <!-- Light yellow -->
+                                            </DataTrigger>
+                                            <DataTrigger Binding="{Binding IsPlainTextMode}" Value="False">
+                                                <Setter Property="Background" Value="White"/>
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </avalonedit:TextEditor.Resources>
                                 <i:Interaction.Behaviors>
-                                    <!-- Attach the behavior for clearing text on right-click -->
                                     <behaviors:ClearOnRightClickBehavior />
+                                    <behaviors:TogglePlainTextModeOnMiddleClickBehavior />
                                 </i:Interaction.Behaviors>
                             </avalonedit:TextEditor>
 
-                            <!-- Copy button -->
                             <Button Content="Copy" Command="{Binding CopyContentCommand}"
                                     HorizontalAlignment="Right"
                                     VerticalAlignment="Bottom" Margin="0,0,25,5"/>
 
-                            <!-- Editor number label with background box -->
                             <Border Background="White" 
                                     HorizontalAlignment="Right" 
                                     VerticalAlignment="Top" 
