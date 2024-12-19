@@ -15,6 +15,7 @@ namespace CopyChanges.ViewModels
         private readonly IClipboardService _clipboardService;
         private readonly IMessageService _messageService;
         private readonly ILineHandlerChainFactory _lineHandlerChainFactory;
+        private readonly IConfigService _configService;
 
         private BaseLineHandler _lineHandlerChain;
 
@@ -24,6 +25,10 @@ namespace CopyChanges.ViewModels
         public ICommand GetGitChangesCommand { get; }
         public ICommand GetProjectFilesCommand { get; }
         public ICommand TestCommand { get; }
+
+        // New commands
+        public ICommand LoadConfigurationCommand { get; }
+        public ICommand SaveConfigurationCommand { get; }
 
         private string _projectDirectory;
         public string ProjectDirectory
@@ -87,7 +92,8 @@ namespace CopyChanges.ViewModels
                              IJsonService jsonService,
                              IClipboardService clipboardService,
                              IMessageService messageService,
-                             ILineHandlerChainFactory lineHandlerChainFactory)
+                             ILineHandlerChainFactory lineHandlerChainFactory,
+                             IConfigService configService)
         {
             _fileService = fileService;
             _gitService = gitService;
@@ -95,9 +101,9 @@ namespace CopyChanges.ViewModels
             _clipboardService = clipboardService;
             _messageService = messageService;
             _lineHandlerChainFactory = lineHandlerChainFactory;
+            _configService = configService;
 
             TextEditors = new ObservableCollection<TextEditorViewModel>();
-
             for (int i = 0; i < 9; i++)
             {
                 TextEditors.Add(new TextEditorViewModel(null, _clipboardService, _messageService, i + 1));
@@ -108,10 +114,13 @@ namespace CopyChanges.ViewModels
             GetProjectFilesCommand = new GetProjectFilesCommand(this, _fileService);
             TestCommand = new RelayCommand(TestMethod);
 
+            // New load/save configuration commands
+            LoadConfigurationCommand = new LoadConfigurationCommand(this, _configService, _messageService);
+            SaveConfigurationCommand = new SaveConfigurationCommand(this, _configService, _messageService);
+
             _messageService.StatusMessageChanged += (s, msg) => StatusMessage = msg;
             _messageService.ErrorMessageChanged += (s, msg) => ErrorMessage = msg;
 
-            // Set up the chain even initially (no project directory yet)
             SetupLineHandlerChain();
         }
 

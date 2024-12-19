@@ -15,6 +15,8 @@
             <Button Content="Get Git Changes (Editor 1)" Command="{Binding GetGitChangesCommand}" Height="25" Margin="5"/>
             <Button Content="Get Project Files" Command="{Binding GetProjectFilesCommand}" Height="25" Margin="5"/>
             <Button Content="Test" Command="{Binding TestCommand}" Height="25" Margin="5"/>
+            <Button Content="Load Configuration" Command="{Binding LoadConfigurationCommand}" Height="25" Margin="5"/>
+            <Button Content="Save Configuration" Command="{Binding SaveConfigurationCommand}" Height="25" Margin="5"/>
             
             <!-- Normal status messages -->
             <TextBlock Text="{Binding StatusMessage}" Margin="10,0,0,0" VerticalAlignment="Center"/>

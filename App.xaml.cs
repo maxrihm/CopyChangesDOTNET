@@ -32,9 +32,9 @@ namespace CopyChanges
             services.AddSingleton<IGitService, GitService>();
             services.AddSingleton<IJsonService, JsonService>();
             services.AddSingleton<IClipboardService, ClipboardService>();
-
-            // New message service for handling and displaying status/error messages
             services.AddSingleton<IMessageService, MessageService>();
+
+            services.AddSingleton<IConfigService, ConfigService>(); // Newly added service
 
             // Register the line handler chain factory
             services.AddSingleton<ILineHandlerChainFactory, LineHandlerChainFactory>();
